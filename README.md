@@ -7,4 +7,4 @@ Tener en cuenta que el sistema debe servir para poder realizar elecciones legisl
 provinciales y nacionales.
 
 Integrantes:Arteaga Marcelo
-            Larrain Maximiliano
+Larrain Maximiliano
