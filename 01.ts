@@ -1,67 +1,84 @@
-//DEFINIMOS LA CLASE DE PARTIDO POLITICO
+const readline = require("readline");
+
+// Función para crear una interfaz de lectura
+function createReadlineInterface() {
+  return readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+}
+
+// Función para solicitar datos al usuario
+function promptUser(question) {
+  const rl = createReadlineInterface();
+
+  return new Promise((resolve, reject) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer);
+    });
+  });
+}
+
+// Definición de la clase PartidoPolitico
 class PartidoPolitico {
-constructor(public nombre: string) {}
+  constructor(public nombre: string) {}
 }
-//DEFINIMOS LA CLASE DE CANDIDATO TENIENDO NOMBRE Y A QUE PARTIDO PERTENECEN COMO ATRIBUTOS
+
+// Definición de la clase Candidato
 class Candidato {
-constructor(public nombre: string, public partido: PartidoPolitico) {}
+  constructor(public nombre: string, public partido: PartidoPolitico) {}
 }
-//EN ESTA LISTA INCLUIMOS LOS CANDIDATOS
+
+// Definición de la clase Lista
 class Lista {
-candidatos: Candidato[] = [];
-//FUNCION PARA EL INGRESO AL ARRAY
-agregarCandidato(candidato: Candidato) {
+  candidatos: Candidato[] = [];
+
+  async agregarCandidato() {
+    const nombre = await promptUser("Ingrese el nombre del candidato: ");
+    const partido = await promptUser(
+      "Ingrese el nombre del partido político: "
+    );
+    const partidoPolitico = new PartidoPolitico(partido);
+    const candidato = new Candidato(nombre, partidoPolitico);
     this.candidatos.push(candidato);
+    console.log("Candidato agregado correctamente.");
+  }
 }
-}
-//DEFINIMOS LA CLASE VOTANTE CON NOMBRE Y DNI
+
+// Definición de la clase Votante
 class Votante {
-constructor(public nombre: string, public dni: string) {}
+  constructor(public nombre: string, public dni: string) {}
 }
 
-//EN LA CLASE VOTO DEFINIMOS COMO ATRIBUTOS QUIEN VOTO Y A QUIEN 
+// Definición de la clase Voto
 class Voto {
-constructor(public votante: Votante, public candidato: Candidato) {}
+  constructor(public votante: Votante, public candidato: Candidato) {}
 }
 
+// Definición de la clase EleccionLegislativa
 class EleccionLegislativa {
-constructor(public distrito: string, public listas: Lista[]) {}
+  constructor(public distrito: string, public listas: Lista[]) {}
 }
 
+// Definición de la clase EleccionNacional
 class EleccionNacional {
-constructor(public pais: string, public listas: Lista[]) {}
+  constructor(public pais: string, public listas: Lista[]) {}
 }
 
+// Definición de la clase EleccionProvincial
 class EleccionProvincial {
-constructor(public provincia: string, public listas: Lista[]) {}
+  constructor(public provincia: string, public listas: Lista[]) {}
 }
 
+// Función principal asincrónica
+async function main() {
+  const partidoA = new PartidoPolitico("Partido A");
+  const partidoB = new PartidoPolitico("Partido B");
 
-//ACA ASIGNAMOS LOS NOMBRES A LOS PARTIDOS
-const partidoA = new PartidoPolitico('Partido A');
-const partidoB = new PartidoPolitico('Partido B');
+  const listaLegislativa = new Lista();
+  await listaLegislativa.agregarCandidato();
+}
 
-
-//A LA HORA DE DEFINIR LAS CONSTANTES DE CANDIDATO VA ATRIBUIDO A UN PARTIDO ESPECIFICO
-const candidato1 = new Candidato('Candidato 1', partidoA);
-const candidato2 = new Candidato('Candidato 2', partidoA);
-const candidato3 = new Candidato('Candidato 3', partidoB);
-
-
-//DEFINIMOS LA LISTA LEGISLATIVA Y AGREGAMOS LOS CANDIDATOS
-const listaLegislativa = new Lista();
-listaLegislativa.agregarCandidato(candidato1);
-listaLegislativa.agregarCandidato(candidato2);
-
-//DEFINIMOS LA CONSTANTE LISTA NACIONAL Y AGREGAMOS SUS CANDIDATOS
-const listaNacional = new Lista();
-listaNacional.agregarCandidato(candidato1);
-listaNacional.agregarCandidato(candidato3);
-
-
-//CREAMOS NUEVAS INSTANCIAS DE ELECCIONLEGISLATIVA INCORPORANDO LOS DATOS OBTENIDOS
-const eleccionLegislativa = new EleccionLegislativa('Distrito 1', [listaLegislativa]);
-const eleccionNacional = new EleccionNacional('Argentina', [listaNacional]);
-const eleccionProvincial = new EleccionProvincial('Provincia X', [listaLegislativa, listaNacional]);
-
-//NO TENEMOS NINGUN TIPO DE CONSOLE LOG YA QUE SOLO DEFINIMOS LAS CLASES.SE PUEDE AGREGAR UN INGRESO TANTO DE INFORMACION O PODEMOS PASAR A PRIVATE LOS ATRIBUTOS DE EL VOTO.
+// Ejecutar la función principal
+main().catch((error) => console.error(error));
